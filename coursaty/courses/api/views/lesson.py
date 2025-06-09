@@ -1,6 +1,8 @@
 # coursaty/courses/views/lesson.py
 
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import OpenApiParameter
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
 
@@ -9,6 +11,16 @@ from coursaty.courses.api.serializers.lesson import LessonSerializer
 from coursaty.courses.models import Lesson
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="module",
+            type=int,
+            location=OpenApiParameter.QUERY,
+            description="Filter lessons by module ID",
+        ),
+    ],
+)
 class LessonViewSet(viewsets.ModelViewSet):
     queryset = Lesson.objects.select_related(
         "module",
